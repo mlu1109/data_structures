@@ -2,8 +2,6 @@
 #define DATA_STRUCTURES_AVL_H
 
 #include <memory>
-#include <iostream>
-#include <random>
 
 namespace AVL
 {
@@ -46,28 +44,28 @@ namespace AVL
 	}
 
 	template<typename T>
-	void rotateLeft(std::unique_ptr<Node<T>> &root)
+	void rotateLeft(std::unique_ptr<Node<T>> &node)
 	{
-		std::swap(root->key, root->right->key);
-		std::swap(root->left, root->right);
+		std::swap(node->key, node->right->key);
+		std::swap(node->left, node->right);
 
-		if (root->left)
+		if (node->left)
 		{
-			std::swap(root->left->left, root->left->right);
-			std::swap(root->left->left, root->right);
+			std::swap(node->left->left, node->left->right);
+			std::swap(node->left->left, node->right);
 		}
 	}
 
 	template<typename T>
-	void rotateRight(std::unique_ptr<Node<T>> &root)
+	void rotateRight(std::unique_ptr<Node<T>> &node)
 	{
-		std::swap(root->key, root->left->key);
-		std::swap(root->left, root->right);
+		std::swap(node->key, node->left->key);
+		std::swap(node->left, node->right);
 
-		if (root->right)
+		if (node->right)
 		{
-			std::swap(root->right->left, root->right->right);
-			std::swap(root->left, root->right->right);
+			std::swap(node->right->left, node->right->right);
+			std::swap(node->left, node->right->right);
 		}
 	}
 
@@ -81,21 +79,21 @@ namespace AVL
 	}
 
 	template<typename T>
-	void balanceNode(std::unique_ptr<Node<T>> &root)
+	void balanceNode(std::unique_ptr<Node<T>> &node)
 	{
-		if (getBalance(root) == 2)
+		if (getBalance(node) == 2)
 		{
-			if (getBalance(root->left) == -1)
-				rotateLeft(root->left);
+			if (getBalance(node->left) == -1)
+				rotateLeft(node->left);
 
-			rotateRight(root);
+			rotateRight(node);
 		}
-		else if (getBalance(root) == -2)
+		else if (getBalance(node) == -2)
 		{
-			if (getBalance(root->right) == 1)
-				rotateRight(root->right);
+			if (getBalance(node->right) == 1)
+				rotateRight(node->right);
 
-			rotateLeft(root);
+			rotateLeft(node);
 		}
 	}
 
@@ -140,12 +138,12 @@ namespace AVL
 	}
 
 	template<typename T>
-	bool isTreeBalanced(std::unique_ptr<Node<T>> &root)
+	bool isTreeBalanced(std::unique_ptr<Node<T>> &node)
 	{
-		if (!root)
+		if (!node)
 			return true;
 
-		return std::abs(getBalance(root)) < 2 && isTreeBalanced(root->left) && isTreeBalanced(root->right);
+		return std::abs(getBalance(node)) < 2 && isTreeBalanced(node->left) && isTreeBalanced(node->right);
 	}
 
 	template<typename T>

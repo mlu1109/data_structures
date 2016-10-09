@@ -233,9 +233,7 @@ TEST(AVL, random_insertions_and_deletions)
 	bool treeBoolArr[20000] = { };
 
 	for (int i = 0; i < AVL::getSize(root); ++i)
-	{
 		treeBoolArr[treeArr[i]] = true;
-	}
 
 	bool equal = true;
 
@@ -249,5 +247,4 @@ TEST(AVL, random_insertions_and_deletions)
 	}
 
 	ASSERT_TRUE(equal);
-
 }
