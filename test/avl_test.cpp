@@ -89,20 +89,20 @@ TEST(AVL, rotateLeft)
 	EXPECT_EQ(root->left->right->key, 3);
 }
 
-TEST(AVL, insertNode_and_balanceNode)
+TEST(AVL, insertKey_and_balanceNode)
 {
 	auto root = createNode(0);
 
 	// Right right imbalance
-	AVL::insertNode(root, 5);
-	AVL::insertNode(root, 6);
+	AVL::insertKey(root, 5);
+	AVL::insertKey(root, 6);
 	ASSERT_EQ(root->key, 5);
 	ASSERT_EQ(root->left->key, 0);
 	ASSERT_EQ(root->right->key, 6);
 
 	// Right left imbalance
-	AVL::insertNode(root, 8);
-	AVL::insertNode(root, 7);
+	AVL::insertKey(root, 8);
+	AVL::insertKey(root, 7);
 	ASSERT_EQ(root->key, 5);
 	ASSERT_EQ(root->left->key, 0);
 	ASSERT_EQ(root->right->key, 7);
@@ -110,37 +110,37 @@ TEST(AVL, insertNode_and_balanceNode)
 	ASSERT_EQ(root->right->right->key, 8);
 
 	// Left left imbalance
-	AVL::insertNode(root, -1);
-	AVL::insertNode(root, -2);
+	AVL::insertKey(root, -1);
+	AVL::insertKey(root, -2);
 	ASSERT_EQ(root->left->key, -1);
 	ASSERT_EQ(root->left->left->key, -2);
 	ASSERT_EQ(root->left->right->key, 0);
 
 	// Left right imbalance
-	AVL::insertNode(root, -5);
-	AVL::insertNode(root, -4);
+	AVL::insertKey(root, -5);
+	AVL::insertKey(root, -4);
 	ASSERT_EQ(root->left->left->key, -4);
 	ASSERT_EQ(root->left->left->left->key, -5);
 	ASSERT_EQ(root->left->left->right->key, -2);
 }
 
-TEST(AVL, removeNode)
+TEST(AVL, removeKey)
 {
 	// No children
 	auto root = createNode(0);
-	AVL::removeNode(root, 0);
+	AVL::removeKey(root, 0);
 	EXPECT_EQ(root, nullptr);
 
 	root = generateTree(); // Full BST of height 2 with min key 0
-	AVL::insertNode(root, -1);
+	AVL::insertKey(root, -1);
 	EXPECT_EQ(root->left->left->left->key, -1);
 
 	// No imbalance
-	AVL::removeNode(root, 5);
+	AVL::removeKey(root, 5);
 	EXPECT_EQ(root->right->key, 6);
 
 	// Left left imbalance
-	AVL::removeNode(root, 6);
+	AVL::removeKey(root, 6);
 	EXPECT_EQ(root->key, 1);
 	EXPECT_EQ(root->left->key, 0);
 	EXPECT_EQ(root->right->key, 3);
@@ -151,18 +151,18 @@ TEST(AVL, removeNode)
 
 	// Two imbalances that needs fixing
 	root = createNode(5);
-	AVL::insertNode(root, 2);
-	AVL::insertNode(root, 8);
-	AVL::insertNode(root, 1);
-	AVL::insertNode(root, 3);
-	AVL::insertNode(root, 7);
-	AVL::insertNode(root, 10);
-	AVL::insertNode(root, 4);
-	AVL::insertNode(root, 6);
-	AVL::insertNode(root, 9);
-	AVL::insertNode(root, 11);
-	AVL::insertNode(root, 12);
-	AVL::removeNode(root, 1);
+	AVL::insertKey(root, 2);
+	AVL::insertKey(root, 8);
+	AVL::insertKey(root, 1);
+	AVL::insertKey(root, 3);
+	AVL::insertKey(root, 7);
+	AVL::insertKey(root, 10);
+	AVL::insertKey(root, 4);
+	AVL::insertKey(root, 6);
+	AVL::insertKey(root, 9);
+	AVL::insertKey(root, 11);
+	AVL::insertKey(root, 12);
+	AVL::removeKey(root, 1);
 	EXPECT_EQ(root->key, 8);
 	EXPECT_EQ(root->left->key, 5);
 	EXPECT_EQ(root->right->key, 10);
@@ -184,7 +184,7 @@ TEST(AVL, removeNode)
 	root->right = createNode(6);
 	root->right->right = createNode(7);
 	root->right->right->right = createNode(8);
-	AVL::removeNode(root, 6);
+	AVL::removeKey(root, 6);
 	ASSERT_EQ(root->key, 7);
 	ASSERT_EQ(root->left->key, 5);
 	ASSERT_EQ(root->right->key, 8);
@@ -194,7 +194,7 @@ TEST(AVL, removeNode)
 	root->left = createNode(4);
 	root->left->left = createNode(3);
 	root->left->left->left = createNode(2);
-	AVL::removeNode(root, 4);
+	AVL::removeKey(root, 4);
 	ASSERT_EQ(root->key, 3);
 	ASSERT_EQ(root->left->key, 2);
 	ASSERT_EQ(root->right->key, 5);
@@ -216,14 +216,14 @@ TEST(AVL, random_insertions_and_deletions)
 		{
 			int rand = (int) dist(rng);
 			arr[rand] = true;
-			AVL::insertNode(root, rand);
+			AVL::insertKey(root, rand);
 		}
 
 		for (int j = 0; j < 10; ++j)
 		{
 			int rand = (int) dist(rng);
 			arr[rand] = false;
-			AVL::removeNode(root, rand);
+			AVL::removeKey(root, rand);
 		}
 	}
 

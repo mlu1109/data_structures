@@ -108,14 +108,14 @@ namespace AVL
 	}
 
 	template<typename T>
-	void insertNode(std::unique_ptr<Node<T>> &node, const T &key)
+	void insertKey(std::unique_ptr<Node<T>> &node, const T &key)
 	{
 		if (!node)
 			node = std::make_unique<Node<T>>(key);
 		else if (key < node->key)
-			insertNode(node->left, key);
+			insertKey(node->left, key);
 		else if (key > node->key)
-			insertNode(node->right, key);
+			insertKey(node->right, key);
 		else
 			return;
 
@@ -124,19 +124,19 @@ namespace AVL
 	}
 
 	template<typename T>
-	void removeNode(std::unique_ptr<Node<T>> &node, const T &key)
+	void removeKey(std::unique_ptr<Node<T>> &node, const T &key)
 	{
 		if (!node)
 			return;
 		else if (node->key > key)
-			removeNode(node->left, key);
+			removeKey(node->left, key);
 		else if (node->key < key)
-			removeNode(node->right, key);
+			removeKey(node->right, key);
 		else if (node->right && node->left)
 		{
 			auto &min_node = getMinNode(node->right);
 			node->key = min_node->key;
-			removeNode(node->right, node->key);
+			removeKey(node->right, node->key);
 		}
 		else if (node->left)
 			node = std::move(node->left);
