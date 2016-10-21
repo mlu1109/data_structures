@@ -2,21 +2,20 @@
 #include "avl.hpp"
 #include "helper.hpp"
 
-TEST(AVL, getHeight)
+TEST(AVL_TEST_HELPER, getCalculatedHeight)
 {
 	auto root = createNode(0);
-	EXPECT_EQ(AVL::getHeight(root), 0);
+	EXPECT_EQ(getCalculatedHeight(root), 0);
 
 	root->left = createNode(1);
-	EXPECT_EQ(AVL::getHeight(root), 1);
+	EXPECT_EQ(getCalculatedHeight(root), 1);
 
 	root = generateTree();
-	EXPECT_EQ(AVL::getHeight(root), 2);
+	EXPECT_EQ(getCalculatedHeight(root), 2);
 
 	root->left->left->right = createNode(3);
-	EXPECT_EQ(AVL::getHeight(root), 3);
+	EXPECT_EQ(getCalculatedHeight(root), 3);
 }
-
 
 TEST(AVL, getBalance)
 {
@@ -24,6 +23,7 @@ TEST(AVL, getBalance)
 	EXPECT_EQ(AVL::getBalance(root), 0);
 
 	root->left = createNode(1);
+	root->height = 1;
 	EXPECT_EQ(AVL::getBalance(root), 1);
 
 	root->right = createNode(1);
@@ -33,6 +33,8 @@ TEST(AVL, getBalance)
 	EXPECT_EQ(AVL::getBalance(root), -1);
 
 	root->right->right = createNode(2);
+	root->height = 2;
+	root->right->height = 1;
 	root->right->left = createNode(2);
 	EXPECT_EQ(AVL::getBalance(root), -2);
 }
@@ -130,7 +132,8 @@ TEST(AVL, removeNode)
 	EXPECT_EQ(root, nullptr);
 
 	root = generateTree(); // Full BST of height 2 with min key 0
-	root->left->left->left = createNode(-1);
+	AVL::insertNode(root, -1);
+	EXPECT_EQ(root->left->left->left->key, -1);
 
 	// No imbalance
 	AVL::removeNode(root, 5);
@@ -148,17 +151,17 @@ TEST(AVL, removeNode)
 
 	// Two imbalances that needs fixing
 	root = createNode(5);
-	root->left = createNode(2);
-	root->right = createNode(8);
-	root->left->left = createNode(1);
-	root->left->right = createNode(3);
-	root->right->left = createNode(7);
-	root->right->right = createNode(10);
-	root->left->right->right = createNode(4);
-	root->right->left->left = createNode(6);
-	root->right->right->left = createNode(9);
-	root->right->right->right = createNode(11);
-	root->right->right->right->right = createNode(12);
+	AVL::insertNode(root, 2);
+	AVL::insertNode(root, 8);
+	AVL::insertNode(root, 1);
+	AVL::insertNode(root, 3);
+	AVL::insertNode(root, 7);
+	AVL::insertNode(root, 10);
+	AVL::insertNode(root, 4);
+	AVL::insertNode(root, 6);
+	AVL::insertNode(root, 9);
+	AVL::insertNode(root, 11);
+	AVL::insertNode(root, 12);
 	AVL::removeNode(root, 1);
 	EXPECT_EQ(root->key, 8);
 	EXPECT_EQ(root->left->key, 5);
@@ -201,13 +204,13 @@ TEST(AVL, random_insertions_and_deletions)
 {
 	std::mt19937 rng;
 	rng.seed(std::random_device()());
-	std::uniform_int_distribution<std::mt19937::result_type> dist(0, 19999);
+	std::uniform_int_distribution<std::mt19937::result_type> dist(0, 50000);
 
 	auto root = createNode(1000);
-	bool arr[20000] = { };
+	bool arr[50000] = { };
 	arr[1000] = true;
 
-	for (int i = 0; i < 1000; ++i)
+	for (int i = 0; i < 5000; ++i)
 	{
 		for (int j = 0; j < 10; ++j)
 		{
@@ -224,20 +227,20 @@ TEST(AVL, random_insertions_and_deletions)
 		}
 	}
 
-	ASSERT_TRUE(AVL::isTreeBalanced(root));
+	ASSERT_TRUE(isTreeBalanced(root));
 
 	int treeSize = AVL::getSize(root);
 	int treeArr[treeSize];
 	int i = 0;
 	AVL::getTreeArray(root, treeArr, i);
-	bool treeBoolArr[20000] = { };
+	bool treeBoolArr[50000] = { };
 
 	for (int i = 0; i < AVL::getSize(root); ++i)
 		treeBoolArr[treeArr[i]] = true;
 
 	bool equal = true;
 
-	for (int i = 0; i < 19999; ++i)
+	for (int i = 0; i < 50000; ++i)
 	{
 		if (treeBoolArr[i] != arr[i])
 		{

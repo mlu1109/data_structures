@@ -1,3 +1,4 @@
+#include <iostream>
 #include "helper.hpp"
 
 std::unique_ptr<AVL::Node<int>> createNode(int key)
@@ -12,8 +13,11 @@ std::unique_ptr<AVL::Node<int>> generateTree()
 	root->left = createNode(1);
 	root->right = createNode(5);
 	root->left->left = createNode(0);
+	root->right->right = createNode(6);
 	root->left->right = createNode(2);
 	root->right->left = createNode(4);
-	root->right->right = createNode(6);
+	root->height = 2;
+	root->left->height = 1;
+	root->right->height = 1;
 	return root;
 }

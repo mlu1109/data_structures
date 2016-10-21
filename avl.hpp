@@ -17,12 +17,14 @@ namespace AVL
 	};
 
 	template<typename T>
-	int getHeight(std::unique_ptr<Node<T>> &node)
+	void updateHeight(std::unique_ptr<Node<T>> &node)
 	{
 		if (!node)
-			return -1;
+			return;
 
-		return 1 + std::max(getHeight(node->left), getHeight(node->right));
+		int height_left = node->left ? node->left->height : 0;
+		int height_right = node->right ? node->right->height : 0;
+		node-> height = node->left || node->right ? std::max(height_left, height_right) + 1 : 0;
 	}
 
 	template<typename T>
@@ -54,6 +56,9 @@ namespace AVL
 			std::swap(node->left->left, node->left->right);
 			std::swap(node->left->left, node->right);
 		}
+
+		updateHeight(node->left);
+		updateHeight(node);
 	}
 
 	template<typename T>
@@ -67,6 +72,9 @@ namespace AVL
 			std::swap(node->right->left, node->right->right);
 			std::swap(node->left, node->right->right);
 		}
+
+		updateHeight(node->right);
+		updateHeight(node);
 	}
 
 	template<typename T>
@@ -75,7 +83,9 @@ namespace AVL
 		if (!node)
 			return 0;
 
-		return getHeight(node->left) - getHeight(node->right);
+		int left_height = node->left ? node->left->height : -1;
+		int right_height = node->right ? node->right->height : -1;
+		return left_height - right_height;
 	}
 
 	template<typename T>
@@ -109,6 +119,7 @@ namespace AVL
 		else
 			return;
 
+		updateHeight(node);
 		balanceNode(node);
 	}
 
@@ -134,16 +145,8 @@ namespace AVL
 		else
 			node = nullptr;
 
+		updateHeight(node);
 		balanceNode(node);
-	}
-
-	template<typename T>
-	bool isTreeBalanced(std::unique_ptr<Node<T>> &node)
-	{
-		if (!node)
-			return true;
-
-		return std::abs(getBalance(node)) < 2 && isTreeBalanced(node->left) && isTreeBalanced(node->right);
 	}
 
 	template<typename T>
